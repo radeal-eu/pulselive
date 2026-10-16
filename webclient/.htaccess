@@ -1,0 +1,14 @@
+DirectoryIndex index.html
+
+# Disable rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>
+
+# The page loads ES modules without a build step, so make browsers revalidate
+# them (cheap 304 answers) instead of reusing a stale cached copy after an update.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|html)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

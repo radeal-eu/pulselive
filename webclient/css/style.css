@@ -1,0 +1,253 @@
+/*! Pulse Monitor Live web client | (c) 2026 Radeal sp. z o.o. | MIT License */
+:root {
+  --bg: #111;
+  --panel: #1b1b1b;
+  --text: #f2f2f2;
+  --muted: #9a9a9a;
+  --accent: #e8892b;
+  --info: #3b82f6;
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --idle: #6b6b6b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.4 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+
+[hidden] { display: none !important; }
+
+/* ---------- API key screen ---------- */
+
+.key-screen {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #2b2d30;
+}
+
+.key-form {
+  display: grid;
+  gap: 14px;
+  width: min(420px, 100%);
+  text-align: center;
+}
+
+.key-form label { font-size: 1.5rem; font-weight: 600; }
+.key-form label.field { margin-top: 6px; font-size: 1.1rem; font-weight: 500; }
+
+.key-form input {
+  padding: 12px 14px;
+  border: 1px solid #55595e;
+  border-radius: 6px;
+  background: #1f2023;
+  color: var(--text);
+  font: inherit;
+  text-align: center;
+}
+
+.key-form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  min-width: 72px;
+  padding: 7px 16px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background: #222;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn:hover { background: #2e2e2e; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 600; }
+.btn-primary:hover { background: #f09a44; }
+.btn-start { background: var(--info); border-color: var(--info); color: #fff; font-weight: 600; }
+.btn-start:hover { background: #5b97f7; }
+.btn-icon { min-width: 0; padding: 3px 6px; line-height: 0; border-color: transparent; background: transparent; color: var(--muted); }
+.btn-icon:hover { background: #2e2e2e; color: var(--text); }
+
+/* ---------- Live screen ---------- */
+
+.live-screen {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px 5px 12px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.grid {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  min-height: 0; /* the grid must not grow with its tiles: its size is the space the layout works with */
+  overflow: hidden;
+  justify-content: center;
+  align-content: center;
+  /* column and row sizes are set by view.js (layout.js) */
+}
+
+/* More tiles than fit at the minimum size: top-aligned and scrollable. */
+.grid.scroll {
+  overflow-y: auto;
+  align-content: start;
+}
+
+/* A registered colour property can be transitioned, which a gradient on its own cannot. */
+@property --zone {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #808080;
+}
+
+.tile {
+  --zone: #808080;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  justify-items: center;
+  container-type: size; /* font sizes below follow the size of the tile */
+  padding: 6px 8px 4px;
+  border: 1px solid #8a8a8a;
+  border-top-color: #e2e2e2;
+  border-bottom-color: #3c3c3c;
+  border-radius: 8px;
+  background:
+    /* white only on the very top edge, black only on the very bottom edge */
+    linear-gradient(to bottom, rgb(255 255 255 / 0.3), transparent 10%, transparent 90%, rgb(0 0 0 / 0.25)),
+    radial-gradient(ellipse at 50% 120%, rgb(255 255 255 / 0.14), transparent 60%),
+    linear-gradient(color-mix(in srgb, var(--zone) 55%, #bbb), color-mix(in srgb, var(--zone) 70%, #444));
+  color: #fff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.45);
+  transition: --zone 0.6s ease; /* animates the zone colour inside the gradients */
+}
+
+.tile.no-signal { filter: saturate(0.4) brightness(0.9); }
+
+.nick {
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: max(11px, 12cqmin);
+  font-weight: 600;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: max(11px, 11cqmin);
+}
+
+.meta span { display: inline-flex; align-items: center; gap: 3px; }
+.meta b { font-variant-numeric: tabular-nums; } /* all digits have the same width */
+/* Reserved width for up to 4 digits, so the icon in front of the number does not move when the value changes. */
+.meta .hr, .meta .kcal { display: inline-block; text-align: left; }
+.meta-hr { margin-left: 1.4ch; } /* balances the empty space reserved to the right of the calories */
+.meta .hr { min-width: 3ch; }
+.meta .kcal { min-width: 4ch; }
+.meta svg { width: 1em; height: 1em; }
+.meta .icon-heart { width: 1.15em; } /* the heart-rate icon is wider than tall (513 x 449) */
+.meta .icon-flame { width: 0.85em; } /* the calories icon is taller than wide (372 x 464) */
+
+.pct { align-self: center; display: flex; align-items: baseline; gap: 2px; }
+.pct-value { font-size: max(26px, 36cqmin); font-weight: 700; font-variant-numeric: tabular-nums; }
+.pct-sign { font-size: max(12px, 12cqmin); }
+
+/* "check the belt": bottom left of the tile, only while the application reports it. */
+.belt {
+  display: none;
+  position: absolute;
+  left: 8px;
+  bottom: 4px;
+  max-width: calc(100% - 16px);
+  align-items: center;
+  gap: 4px;
+  font-size: max(10px, 7.5cqmin);
+  font-weight: 600;
+  white-space: nowrap;
+  animation: belt-pulse 1.4s ease-in-out infinite;
+}
+.belt svg { flex: none; width: 1.2em; height: 1.2em; }
+.belt span { overflow: hidden; text-overflow: ellipsis; }
+.tile.check-belt .belt { display: flex; }
+@keyframes belt-pulse { 50% { opacity: 0.4; } }
+@media (prefers-reduced-motion: reduce) { .belt { animation: none; } }
+
+/* ---------- Bottom bar ---------- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border-top: 1px solid #2c2c2c;
+}
+
+.bar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.bar-right { display: flex; align-items: center; gap: 28px; min-width: 0; }
+
+.dot { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--idle); }
+.dot[data-tone="info"] { background: var(--info); }
+.dot[data-tone="ok"] { background: var(--ok); }
+.dot[data-tone="warn"] { background: var(--warn); }
+
+.status-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 0.85rem; }
+
+/* the bar gap is 14 px: dot 22 px from the button, label 6 px from the dot */
+.btn + .dot { margin-left: 8px; }
+.dot + .status-label { margin-left: -8px; }
+
+.elapsed { font-size: 1.2rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.logo { display: block; height: 32px; width: auto; }
+
+@media (max-width: 520px) {
+  .status-label { display: none; }
+  .logo { height: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile { transition: none; }
+}
+
+/* ---------- Confirmation dialog ---------- */
+
+.dialog {
+  padding: 20px 24px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.dialog::backdrop { background: rgb(0 0 0 / 0.6); }
+.dialog p { margin: 0 0 16px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
