@@ -103,4 +103,4 @@ When there is no snapshot yet, `/live` answers `503` with `{"status":"no data ye
 
 ## Versioning
 
-The `v` field identifies the schema version. New fields may be added without changing `v`, so readers should ignore fields they do not recognise.
+The `v` field identifies the schema version. Schema `1` was introduced with the Live API in Pulse Monitor 5. New fields may be added without changing `v`, so readers should ignore fields they do not recognise.

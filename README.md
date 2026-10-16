@@ -9,7 +9,8 @@ Pulse Monitor is a Windows application that shows the heart rate of everyone in 
 
 ## Pulse Monitor Live API
 
-Pulse Monitor can present training data in near real time through an API. While a training (or a Drop-in session) is
+Pulse Monitor can present training data in near real time through an API. The Live API was introduced in
+**Pulse Monitor 5**. While a training (or a Drop-in session) is
 on screen, the application **starts its own small server** on the computer it runs on and publishes the current state of all
 participants about once per second **on your local network**. Your own display, dashboard or integration connects to that
 computer and reads the data. The server stops when the training screen is closed.
@@ -29,7 +30,7 @@ The data stays on your network: it goes from the Pulse Monitor computer straight
 
 ## Enabling the API
 
-The Live API is an optional feature of Pulse Monitor, available with licenses that include it.
+The Live API is an optional feature of Pulse Monitor, available from **version 5** and with licenses that include it.
 
 1. In Pulse Monitor open **Settings** and the **Live API** tab (it is shown only when your license includes the feature).
 2. Tick **Publish live training data on the local network** and save.
