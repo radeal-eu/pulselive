@@ -3,6 +3,7 @@
 A small live view for the browser, written in plain JavaScript (ES modules, no build step, no dependencies).
 It shows the participants as tiles, like the training screen of the Pulse Monitor application.
 The same page is built into Pulse Monitor and served at `/` of its Live API server (open `https://<address>:<port>/?key=<key>`), so for normal use you do not have to host it yourself.
+A hosted copy is available at [www.pulsemonitor.net/webclient](https://www.pulsemonitor.net/webclient/) (see [Built-in viewer](../README.md#built-in-viewer)); it is a copy of this repository and collects no data.
 It reads the data from the Pulse Monitor computer on your local network with
 [`GET /live`](../README.md#get-live) and the WebSocket [`/ws`](../README.md#get-ws-websocket).
 

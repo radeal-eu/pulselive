@@ -71,6 +71,13 @@ The first time, the browser warns that the certificate is not trusted (it is mad
 training screen of the program, and is the same as the [web client](webclient/) in this repository. The page and its files carry
 no data and need no key; the data does.
 
+**Hosted copy.** The same page is also available online at [www.pulsemonitor.net/webclient](https://www.pulsemonitor.net/webclient/):
+enter the address and the access key shown in the Pulse Monitor **Settings → Live API** window. The browser connects straight to your Pulse Monitor computer; the data does not
+go through our servers, and the address and key stay in your browser. Because the page comes from the internet and reads from your local
+network, the browser (Chrome, for example) may ask for permission to access devices on the local network: allow it. With the
+encryption turned off in Pulse Monitor (`http://`) the hosted page cannot connect, as browsers do not let an `https://` page read from a
+plain-HTTP server; use the built-in viewer then.
+
 <img src="assets/web-browser-api.png" alt="The built-in viewer in a browser: one tile per participant with heart rate, calories and percentage of maximum heart rate" width="720">
 
 ## Encryption and the certificate
