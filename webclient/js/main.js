@@ -1,5 +1,5 @@
 /*! Pulse Monitor Live web client | (c) 2026 Radeal sp. z o.o. | MIT License */
-import { loadConnection, saveConnection, clearConnection } from './storage.js';
+import { loadConnection, saveConnection, clearConnection, loadStopped, saveStopped } from './storage.js';
 import { parseAddress, normalizeKey, isServedByPulseMonitor } from './connection.js';
 import { PulseLiveClient } from './client.js';
 import { LiveView } from './view.js';
@@ -51,6 +51,7 @@ function showConnectionScreen() {
     }
     if (!key) return;
     const connection = { ...parsed, key };
+    saveStopped(false);
     saveConnection(connection); // when browser storage is unavailable the connection just lasts until the page is closed
     $('key-screen').hidden = true;
     showLiveScreen(connection, true);
@@ -71,7 +72,15 @@ function showLiveScreen(connection, autostart) {
   view.setState({ state: 'stopped' });
   view.setRunning(false);
 
-  $('toggle').addEventListener('click', () => (client.running ? client.stop() : client.start()));
+  $('toggle').addEventListener('click', () => {
+    if (client.running) {
+      client.stop();
+      saveStopped(true); // stays stopped after a reload
+    } else {
+      client.start();
+      saveStopped(false);
+    }
+  });
   const dialog = $('logout-dialog');
   $('logout').addEventListener('click', () => dialog.showModal());
   $('logout-cancel').addEventListener('click', () => dialog.close());
@@ -81,18 +90,19 @@ function showLiveScreen(connection, autostart) {
     location.reload();
   });
 
-  // A page opened from a link, or just configured, starts at once; after a plain reload it waits for Start.
+  // The page starts listening at once (from a link, just configured, or after a reload); only an explicit Stop keeps it quiet.
   if (autostart) client.start();
 }
 
 const fromUrl = connectionFromUrl();
 if (fromUrl) {
+  saveStopped(false);
   saveConnection(fromUrl);
   showLiveScreen(fromUrl, true);
 } else {
   const stored = loadConnection();
   if (stored) {
-    showLiveScreen(stored, false);
+    showLiveScreen(stored, !loadStopped());
   } else {
     showConnectionScreen();
   }

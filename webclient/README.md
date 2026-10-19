@@ -28,8 +28,8 @@ Then either:
 - open a link that carries them: `index.html?host=https://192.168.1.15:8765&key=K7MH3RAW`.
 
 The address and the key are stored in the browser (`localStorage`); the link is removed from the address bar after it is read,
-so the key does not stay in the history. A page opened from a link, or just configured, starts at once.
-After a plain reload it waits for the blue **Start** button; **Stop** ends the connection.
+so the key does not stay in the history. The page starts listening at once, also after a reload. **Stop** ends the connection, and it stays off after a reload
+until you press the blue **Start** button.
 
 The folder includes an `.htaccess` that sets `Cache-Control: no-cache` for the scripts and styles (Apache with `mod_headers`).
 On other servers set the same header, otherwise a browser may keep running a stale copy of the modules after an update.

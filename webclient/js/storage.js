@@ -1,5 +1,5 @@
 /*! Pulse Monitor Live web client | (c) 2026 Radeal sp. z o.o. | MIT License */
-import { STORAGE_KEY } from './config.js';
+import { STORAGE_KEY, STOPPED_KEY } from './config.js';
 
 // localStorage can throw (private mode, blocked storage), so every access is guarded.
 // The stored connection is { scheme: 'https', address: 'host:port', key: 'ABCDEFGH' }.
@@ -27,6 +27,25 @@ export function saveConnection(connection) {
 export function clearConnection() {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STOPPED_KEY);
+  } catch {
+    /* nothing to do */
+  }
+}
+
+// After a reload the page listens again, unless the user had pressed Stop.
+export function loadStopped() {
+  try {
+    return localStorage.getItem(STOPPED_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function saveStopped(stopped) {
+  try {
+    if (stopped) localStorage.setItem(STOPPED_KEY, '1');
+    else localStorage.removeItem(STOPPED_KEY);
   } catch {
     /* nothing to do */
   }

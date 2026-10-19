@@ -1,5 +1,6 @@
 /*! Pulse Monitor Live web client | (c) 2026 Radeal sp. z o.o. | MIT License */
 export const STORAGE_KEY = 'pulselive.connection';
+export const STOPPED_KEY = 'pulselive.stopped'; // set while the user has pressed Stop
 export const DEFAULT_PORT = 8765;
 export const DEFAULT_SCHEME = 'https'; // Pulse Monitor encrypts by default
 export const STALE_MS = 10000;
