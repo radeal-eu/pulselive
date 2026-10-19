@@ -47,3 +47,17 @@ export function isBlockedByMixedContent({ scheme, address }) {
   const host = address.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
   return !(host === 'localhost' || host === '127.0.0.1' || host === '::1');
 }
+
+/** Is this host an IP address (IPv4, or IPv6 in brackets as `location.hostname` gives it)? */
+export function isIpHost(hostname) {
+  return /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname) || /^\[[0-9a-f:.]+\]$/i.test(hostname);
+}
+
+/**
+ * Was this page served by Pulse Monitor itself? Its address is an IP address on the local network
+ * (https://192.168.1.15:8765/). A page from a domain (the hosted copy, a development server) is not, and
+ * must not pretend that its own address is the Pulse Monitor computer.
+ */
+export function isServedByPulseMonitor() {
+  return location.protocol.startsWith('http') && isIpHost(location.hostname);
+}

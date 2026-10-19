@@ -1,10 +1,12 @@
 /*! Pulse Monitor Live web client | (c) 2026 Radeal sp. z o.o. | MIT License */
 import { loadConnection, saveConnection, clearConnection } from './storage.js';
-import { parseAddress, normalizeKey } from './connection.js';
+import { parseAddress, normalizeKey, isServedByPulseMonitor } from './connection.js';
 import { PulseLiveClient } from './client.js';
 import { LiveView } from './view.js';
 
 const $ = (id) => document.getElementById(id);
+
+let keyFromUrl = ''; // a key in the link of a page that cannot say which computer it belongs to
 
 // A link like  https://192.168.1.15:8765/?key=K7MH3RAW  (the page served by the application itself) or
 // webclient/index.html?host=https://192.168.1.15:8765&key=K7MH3RAW  carries the connection with it.
@@ -14,11 +16,13 @@ function connectionFromUrl() {
   const key = normalizeKey(params.get('key'));
   if (!key) return null;
   // `host` may carry the scheme (https://host:port); without it https is assumed. Without `host` the page talks to the
-  // server it came from, with the same scheme.
+  // server it came from, with the same scheme - but only when that is Pulse Monitor itself (an IP address), not
+  // a domain such as the hosted copy.
   const parsed = params.get('host')
     ? parseAddress(params.get('host'))
-    : location.protocol.startsWith('http') ? parseAddress(location.origin) : null;
+    : isServedByPulseMonitor() ? parseAddress(location.origin) : null;
   history.replaceState(null, '', location.pathname);
+  if (!parsed) keyFromUrl = key; // the connection screen offers it, the address still has to be typed
   return parsed ? { ...parsed, key } : null;
 }
 
@@ -26,8 +30,10 @@ function showConnectionScreen() {
   $('key-screen').hidden = false;
   const addressInput = $('address-input');
   const keyInput = $('key-input');
-  const defaultAddress = location.protocol.startsWith('http') ? location.origin : '';
+  // Offer the address of this page only when Pulse Monitor itself serves it (an IP address); the placeholder shows the format.
+  const defaultAddress = isServedByPulseMonitor() ? location.origin : '';
   addressInput.value = defaultAddress;
+  keyInput.value = keyFromUrl;
   (defaultAddress ? keyInput : addressInput).focus();
 
   for (const input of [addressInput, keyInput]) {
