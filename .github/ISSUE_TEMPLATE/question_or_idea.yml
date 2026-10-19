@@ -1,0 +1,22 @@
+name: Question or idea
+description: A question about using the Live API, or a suggestion for the documentation, examples or data format
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This tracker is public: **never paste your access key** (use `KEY`) and **no real participant data** (nicknames with heart rate are health data).
+
+        Problems with the program itself, licenses or your account: write to support@pulsemonitor.net.
+  - type: input
+    id: version
+    attributes:
+      label: Pulse Monitor version (if relevant)
+      placeholder: "5.0"
+  - type: textarea
+    id: text
+    attributes:
+      label: Your question or idea
+      description: What are you trying to build or find out? For an idea, describe the use case, not only the change.
+    validations:
+      required: true

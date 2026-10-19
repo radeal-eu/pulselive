@@ -1,0 +1,72 @@
+name: Bug report
+description: Something does not work as documented (the API, an example or the web client)
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. This tracker is public, so please read this first:
+
+        - **Never paste your access key** (the 8 characters from Pulse Monitor under *Settings > Live API*), not even in a link such as `https://192.168.1.15:8765/?key=...`. Replace it with `KEY`.
+        - **Never paste real participant data.** Heart rate together with a nickname is health data. Replace nicknames with made-up ones.
+        - Problems with the program itself, licenses or your account: write to support@pulsemonitor.net.
+  - type: input
+    id: version
+    attributes:
+      label: Pulse Monitor version
+      description: The Live API needs Pulse Monitor 5 or later.
+      placeholder: "5.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: What are you using?
+      options:
+        - GET /live
+        - WebSocket /ws
+        - Built-in viewer (page served by Pulse Monitor)
+        - Hosted web client (pulsemonitor.net/webclient)
+        - Web client from this repository
+        - An example from this repository
+        - Documentation
+        - Something else
+    validations:
+      required: true
+  - type: dropdown
+    id: encryption
+    attributes:
+      label: Encryption in Pulse Monitor
+      description: Settings > Live API, "Turn off encryption".
+      options:
+        - On (default, https / wss)
+        - Turned off (http / ws)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect to see instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What you did, in order. The status line of the web client or the HTTP status code of `/live` helps a lot.
+      placeholder: |
+        1. ...
+        2. ...
+  - type: input
+    id: environment
+    attributes:
+      label: Browser or runtime, and system
+      placeholder: "Chrome 130 on Windows 11 / Node.js 22 on Linux"
+  - type: textarea
+    id: snapshot
+    attributes:
+      label: Example data or console output (optional)
+      description: Remove the key and use made-up nicknames before pasting.
+      render: text

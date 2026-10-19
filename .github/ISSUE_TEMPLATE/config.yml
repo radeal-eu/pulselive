@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Pulse Monitor user manual
+    url: https://www.pulsemonitor.net/manual
+    about: How to use Pulse Monitor itself, including Settings > Live API.
+  - name: Licenses, accounts and problems with the program
+    url: https://www.pulsemonitor.net/
+    about: For anything that is not about this documentation, the examples or the web client, write to support@pulsemonitor.net.
