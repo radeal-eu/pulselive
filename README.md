@@ -28,6 +28,10 @@ The data stays on your network: it goes from the Pulse Monitor computer straight
 - [examples/](examples/) - ready-to-run clients
 - [webclient/](webclient/) - a browser live view in plain JavaScript
 
+<img src="assets/operational-scheme.jpg" alt="Scheme of operation: the computer running Pulse Monitor shares the live training data over the local network, and screens and other devices in the room show it" width="800">
+
+*The computer with Pulse Monitor publishes the training data on the local network; screens and other devices read it from there.*
+
 ## Enabling the API
 
 The Live API is an optional feature of Pulse Monitor, available from **version 5** and with licenses that include it.
